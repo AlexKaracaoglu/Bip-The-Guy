@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -14,12 +15,29 @@ class ViewController: UIViewController {
     // PROPERTIES
     @IBOutlet weak var imageToBip: UIImageView!
     
+    var soundPlayer = AVAudioPlayer()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     // FUNCTIONS
+    func playSound(soundName: String, audioPlayer: inout AVAudioPlayer) {
+        if let sound = NSDataAsset(name: soundName) {
+            do {
+                try audioPlayer = AVAudioPlayer(data: sound.data)
+                audioPlayer.play()
+            }
+            catch {
+                print("ERROR: data in sound file \(soundName) was not able to be played")
+            }
+        }
+        else {
+            print("ERROR file \(soundName) didn't load")
+        }
+    }
+    
     func animate() {
         let originalBounds = self.imageToBip.bounds
         
@@ -51,6 +69,6 @@ class ViewController: UIViewController {
     @IBAction func imageTapped(_ sender: UITapGestureRecognizer) {
         print("BIP BIP!")
         animate()
+        playSound(soundName: "punchSound", audioPlayer: &soundPlayer)
     }
 }
-
